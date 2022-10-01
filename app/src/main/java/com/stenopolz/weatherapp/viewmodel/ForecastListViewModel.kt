@@ -69,7 +69,7 @@ class ForecastListViewModel @Inject constructor(
             WeatherUiModel(
                 cityName = it.cityName,
                 temperature = res.getString(
-                    R.string.temperature_celsius_degrees,
+                    R.string.temperature_celsius_degrees_text,
                     it.temperature.roundToInt()
                 ),
                 temperatureRange = res.getString(

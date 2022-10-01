@@ -3,6 +3,7 @@
     <string name="weather_fragment_label">Weather forecast</string>
     <string name="error_message">Something went wrong, please try again</string>
     <string name="try_again">Try again</string>
-    <string name="temperature_celsius_degrees">%d°C</string>
-    <string name="temperature_range">$1s/$2s Feels like $3s</string>
+    <string name="temperature_celsius_degrees_text">%d°C</string>
+    <string name="temperature_celsius_degrees">%d°</string>
+    <string name="temperature_range">%1$s / %2$s Feels like %3$s</string>
 </resources>
