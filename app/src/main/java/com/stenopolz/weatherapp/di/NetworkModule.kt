@@ -32,6 +32,6 @@ object NetworkModule {
         .build()
 
     @Provides
-    fun provideCountryApi(retrofit: Retrofit): WeatherServiceAPI =
+    fun provideWeatherApi(retrofit: Retrofit): WeatherServiceAPI =
         retrofit.create(WeatherServiceAPI::class.java)
 }
