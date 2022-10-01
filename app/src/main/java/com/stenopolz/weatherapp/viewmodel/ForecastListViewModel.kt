@@ -2,10 +2,11 @@ package com.stenopolz.weatherapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.stenopolz.weatherapp.R
 import com.stenopolz.weatherapp.extension.CallResult
 import com.stenopolz.weatherapp.model.data.application.DispatchersHolder
+import com.stenopolz.weatherapp.model.data.application.ResourceProvider
 import com.stenopolz.weatherapp.model.data.application.WeatherInfo
-import com.stenopolz.weatherapp.model.data.network.LatLonDTO
 import com.stenopolz.weatherapp.model.repository.PreferencesRepository
 import com.stenopolz.weatherapp.model.repository.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,12 +15,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class ForecastListViewModel @Inject constructor(
     private val repository: WeatherRepository,
     private val preferences: PreferencesRepository,
-    private val dispatchers: DispatchersHolder
+    private val dispatchers: DispatchersHolder,
+    private val res: ResourceProvider
 ) : ViewModel() {
     private val _weatherList = MutableStateFlow<List<WeatherUiModel>>(emptyList())
     val weatherList: StateFlow<List<WeatherUiModel>> = _weatherList
@@ -63,7 +66,30 @@ class ForecastListViewModel @Inject constructor(
 
     private fun handleSuccess(weatherList: List<WeatherInfo>) {
         _weatherList.value = weatherList.map {
-            WeatherUiModel(cityName = it.cityName)
+            WeatherUiModel(
+                cityName = it.cityName,
+                temperature = res.getString(
+                    R.string.temperature_celsius_degrees,
+                    it.temperature.roundToInt()
+                ),
+                temperatureRange = res.getString(
+                    R.string.temperature_range,
+                    res.getString(
+                        R.string.temperature_celsius_degrees,
+                        it.maxTemperature.roundToInt()
+                    ),
+                    res.getString(
+                        R.string.temperature_celsius_degrees,
+                        it.minTemperature.roundToInt()
+                    ),
+                    res.getString(
+                        R.string.temperature_celsius_degrees,
+                        it.feelsLikeTemperature.roundToInt()
+                    )
+                ),
+                description = it.description,
+                imageUrl = it.imageUrl
+            )
         }
         _contentVisible.value = true
         _isError.value = false

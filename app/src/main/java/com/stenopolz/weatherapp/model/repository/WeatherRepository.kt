@@ -19,12 +19,20 @@ class WeatherRepository @Inject constructor(
             coroutineScope {
                 val callsList = cities.map { city ->
                     async {
-                        service.getWeather(
+                        val weather = service.getWeather(
                             lat = city.position.lat,
                             lon = city.position.lon,
                             apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY
                         )
-                        return@async WeatherInfo(cityName = city.name)
+                        return@async WeatherInfo(
+                            cityName = city.name,
+                            temperature = weather.mainWeather.temperature,
+                            minTemperature = weather.mainWeather.tempMin,
+                            maxTemperature = weather.mainWeather.tempMax,
+                            feelsLikeTemperature = weather.mainWeather.feelsLikeTemperature,
+                            description = weather.weather.first().description,
+                            imageUrl = buildIconUrlFromIconCode(weather.weather.first().iconCode)
+                        )
                     }
 
                 }
@@ -32,4 +40,6 @@ class WeatherRepository @Inject constructor(
             }
         }
     }
+
+    private fun buildIconUrlFromIconCode(code: String) = "https://openweathermap.org/img/wn/$code@4x.png"
 }
